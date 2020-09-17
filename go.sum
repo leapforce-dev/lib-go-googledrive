@@ -49,6 +49,16 @@ github.com/Leapforce-nl/go_errortools v0.0.0-20200218173102-e74ff3d10089 h1:HkMV
 github.com/Leapforce-nl/go_errortools v0.0.0-20200218173102-e74ff3d10089/go.mod h1:goG+xW3RRxvv/HpoxmaTFMdH+a/YeiZseoGzL9RwBAE=
 github.com/Leapforce-nl/go_oauth2 v0.0.0-20200915230224-f10d9f5f4792 h1:xufsHd12dCotWIAzhh0r6pSczCowoykM9MblbpKDdig=
 github.com/Leapforce-nl/go_oauth2 v0.0.0-20200915230224-f10d9f5f4792/go.mod h1:lI1cb81JE9c5oyOQrWINwm1qCLowa9/bCT/m/GKwU/M=
+github.com/Leapforce-nl/go_oauth2 v0.0.0-20200916140935-f8244212889a h1:XL1qPdJ6F3T2r2f2UgH/oo1k6kMJezpKEFxXWbwhLdo=
+github.com/Leapforce-nl/go_oauth2 v0.0.0-20200916140935-f8244212889a/go.mod h1:lI1cb81JE9c5oyOQrWINwm1qCLowa9/bCT/m/GKwU/M=
+github.com/Leapforce-nl/go_oauth2 v0.0.0-20200917090921-61eb44fe1946 h1:QEn5V2oAAbSz9pbLj4fanoO34m9gNDqdbvsSdK28bP8=
+github.com/Leapforce-nl/go_oauth2 v0.0.0-20200917090921-61eb44fe1946/go.mod h1:lI1cb81JE9c5oyOQrWINwm1qCLowa9/bCT/m/GKwU/M=
+github.com/Leapforce-nl/go_oauth2 v0.0.0-20200917102836-0bbb9a8ddd70 h1:eE5FWANT+7TSnoIAzNf+Sm5AVd6NrZK4Pq1Fia0fykA=
+github.com/Leapforce-nl/go_oauth2 v0.0.0-20200917102836-0bbb9a8ddd70/go.mod h1:lI1cb81JE9c5oyOQrWINwm1qCLowa9/bCT/m/GKwU/M=
+github.com/Leapforce-nl/go_oauth2 v0.0.0-20200917103035-94c4ba349a40 h1:pNagV0CJaMyYtL6o8uWKTgP1Ow+Uznl1i3qabP3Q5PI=
+github.com/Leapforce-nl/go_oauth2 v0.0.0-20200917103035-94c4ba349a40/go.mod h1:lI1cb81JE9c5oyOQrWINwm1qCLowa9/bCT/m/GKwU/M=
+github.com/Leapforce-nl/go_oauth2 v0.0.0-20200917103130-7ece543074b6 h1:xrjLtBWC9FMnYQCKV6F7dvz2YEECn92/v4ZOOGrGU+4=
+github.com/Leapforce-nl/go_oauth2 v0.0.0-20200917103130-7ece543074b6/go.mod h1:lI1cb81JE9c5oyOQrWINwm1qCLowa9/bCT/m/GKwU/M=
 github.com/Leapforce-nl/go_types v0.0.0-20200126202922-ba4900de15b8 h1:q0/mdn+TnZqBB439lOeuLPHPnQaVYCQL2B4BRLbCbuQ=
 github.com/Leapforce-nl/go_types v0.0.0-20200126202922-ba4900de15b8/go.mod h1:AuUJ0pyk3Xc6IgEuzCr5NvEl277YQwiIgJ12/SfmByI=
 github.com/Shopify/goreferrer v0.0.0-20181106222321-ec9c9a553398/go.mod h1:a1uqRtAwp2Xwc6WNPJEufxJ7fx3npB4UV/JOLmbu5I0=

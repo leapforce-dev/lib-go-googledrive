@@ -10,7 +10,7 @@ import (
 
 const (
 	apiName         string = "GoogleDrive"
-	apiURL          string = "https://api.linkedin.com/v2"
+	apiURL          string = "https://www.googleapis.com/drive/v3"
 	authURL         string = "https://accounts.google.com/o/oauth2/v2/auth"
 	tokenURL        string = "https://oauth2.googleapis.com/token"
 	tokenHTTPMethod string = http.MethodPost
@@ -20,8 +20,7 @@ const (
 // GoogleDrive stores GoogleDrive configuration
 //
 type GoogleDrive struct {
-	baseURL string
-	oAuth2  *oauth2.OAuth2
+	oAuth2 *oauth2.OAuth2
 }
 
 // methods
@@ -38,4 +37,14 @@ func (gd *GoogleDrive) ValidateToken() error {
 
 func (gd *GoogleDrive) InitToken() error {
 	return gd.oAuth2.InitToken()
+}
+
+func (gd *GoogleDrive) Get(url string, model interface{}) (*http.Response, error) {
+	res, err := gd.oAuth2.Get(url, model)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
 }
