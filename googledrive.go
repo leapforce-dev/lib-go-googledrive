@@ -48,3 +48,13 @@ func (gd *GoogleDrive) Get(url string, model interface{}) (*http.Response, error
 
 	return res, nil
 }
+
+func (gd *GoogleDrive) Patch(url string, model interface{}) (*http.Response, error) {
+	res, err := gd.oAuth2.Patch(url, nil, model)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
