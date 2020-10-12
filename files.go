@@ -76,3 +76,15 @@ func (gd *GoogleDrive) MoveFile(fileID string, fromDriveID string, toDriveID str
 
 	return res, nil
 }
+
+func (gd *GoogleDrive) ExportFile(fileID string, mimeType string) (*http.Response, error) {
+	url := fmt.Sprintf("%s/files/%s/export?mimeType=%s", apiURL, fileID, mimeType)
+	//fmt.Println(url)
+
+	res, err := gd.Get(url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
