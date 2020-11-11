@@ -53,6 +53,20 @@ func (gd *GoogleDrive) GetFiles(driveID *string, mimeType *string) (*[]File, err
 	return &filesReponse.Files, nil
 }
 
+func (gd *GoogleDrive) GetFile(fileID string) (*File, error) {
+	url := fmt.Sprintf("%s/files/%s", apiURL, fileID)
+	//fmt.Println(url)
+
+	file := File{}
+
+	_, err := gd.Get(url, &file)
+	if err != nil {
+		return nil, err
+	}
+
+	return &file, nil
+}
+
 func (gd *GoogleDrive) DownloadFile(fileID string) (*http.Response, error) {
 	url := fmt.Sprintf("%s/files/%s?alt=media", apiURL, fileID)
 	//fmt.Println(url)
