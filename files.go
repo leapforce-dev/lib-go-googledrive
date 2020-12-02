@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	errortools "github.com/leapforce-libraries/go_errortools"
 )
 
 type FilesResponse struct {
@@ -24,7 +26,7 @@ type File struct {
 	Parents           []string `json:"parents"`
 }
 
-func (gd *GoogleDrive) GetFiles(driveID *string, mimeType *string) (*[]File, error) {
+func (gd *GoogleDrive) GetFiles(driveID *string, mimeType *string) (*[]File, *errortools.Error) {
 	q := ""
 	filters := []string{}
 
@@ -45,59 +47,59 @@ func (gd *GoogleDrive) GetFiles(driveID *string, mimeType *string) (*[]File, err
 
 	filesReponse := FilesResponse{}
 
-	_, err := gd.Get(url, &filesReponse)
-	if err != nil {
-		return nil, err
+	_, e := gd.Get(url, &filesReponse)
+	if e != nil {
+		return nil, e
 	}
 
 	return &filesReponse.Files, nil
 }
 
-func (gd *GoogleDrive) GetFile(fileID string) (*File, error) {
+func (gd *GoogleDrive) GetFile(fileID string) (*File, *errortools.Error) {
 	url := fmt.Sprintf("%s/files/%s", apiURL, fileID)
 	//fmt.Println(url)
 
 	file := File{}
 
-	_, err := gd.Get(url, &file)
-	if err != nil {
-		return nil, err
+	_, e := gd.Get(url, &file)
+	if e != nil {
+		return nil, e
 	}
 
 	return &file, nil
 }
 
-func (gd *GoogleDrive) DownloadFile(fileID string) (*http.Response, error) {
+func (gd *GoogleDrive) DownloadFile(fileID string) (*http.Response, *errortools.Error) {
 	url := fmt.Sprintf("%s/files/%s?alt=media", apiURL, fileID)
 	//fmt.Println(url)
 
-	res, err := gd.Get(url, nil)
-	if err != nil {
-		return nil, err
+	res, e := gd.Get(url, nil)
+	if e != nil {
+		return nil, e
 	}
 
 	return res, nil
 }
 
-func (gd *GoogleDrive) MoveFile(fileID string, fromDriveID string, toDriveID string) (*http.Response, error) {
+func (gd *GoogleDrive) MoveFile(fileID string, fromDriveID string, toDriveID string) (*http.Response, *errortools.Error) {
 	url := fmt.Sprintf("%s/files/%s?uploadType=media&addParents=%s&removeParents=%s", apiURL, fileID, toDriveID, fromDriveID)
 	//fmt.Println(url)
 
-	res, err := gd.Patch(url, nil)
-	if err != nil {
-		return nil, err
+	res, e := gd.Patch(url, nil)
+	if e != nil {
+		return nil, e
 	}
 
 	return res, nil
 }
 
-func (gd *GoogleDrive) ExportFile(fileID string, mimeType string) (*http.Response, error) {
+func (gd *GoogleDrive) ExportFile(fileID string, mimeType string) (*http.Response, *errortools.Error) {
 	url := fmt.Sprintf("%s/files/%s/export?mimeType=%s", apiURL, fileID, mimeType)
 	//fmt.Println(url)
 
-	res, err := gd.Get(url, nil)
-	if err != nil {
-		return nil, err
+	res, e := gd.Get(url, nil)
+	if e != nil {
+		return nil, e
 	}
 
 	return res, nil

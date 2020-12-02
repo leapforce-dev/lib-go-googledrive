@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	bigquerytools "github.com/leapforce-libraries/go_bigquerytools"
-
+	errortools "github.com/leapforce-libraries/go_errortools"
 	oauth2 "github.com/leapforce-libraries/go_oauth2"
 )
 
@@ -25,7 +25,7 @@ type GoogleDrive struct {
 
 // methods
 //
-func NewGoogleDrive(clientID string, clientSecret string, scope string, bigQuery *bigquerytools.BigQuery, isLive bool) (*GoogleDrive, error) {
+func NewGoogleDrive(clientID string, clientSecret string, scope string, bigQuery *bigquerytools.BigQuery, isLive bool) *GoogleDrive {
 	gd := GoogleDrive{}
 	config := oauth2.OAuth2Config{
 		ApiName:         apiName,
@@ -38,32 +38,32 @@ func NewGoogleDrive(clientID string, clientSecret string, scope string, bigQuery
 		TokenHTTPMethod: tokenHTTPMethod,
 	}
 	gd.oAuth2 = oauth2.NewOAuth(config, bigQuery, isLive)
-	return &gd, nil
+	return &gd
 }
 
-func (gd *GoogleDrive) ValidateToken() (*oauth2.Token, error) {
+func (gd *GoogleDrive) ValidateToken() (*oauth2.Token, *errortools.Error) {
 	return gd.oAuth2.ValidateToken()
 }
 
-func (gd *GoogleDrive) InitToken() error {
+func (gd *GoogleDrive) InitToken() *errortools.Error {
 	return gd.oAuth2.InitToken()
 }
 
-func (gd *GoogleDrive) Get(url string, model interface{}) (*http.Response, error) {
-	res, err := gd.oAuth2.Get(url, model)
+func (gd *GoogleDrive) Get(url string, model interface{}) (*http.Response, *errortools.Error) {
+	_, res, e := gd.oAuth2.Get(url, model, nil)
 
-	if err != nil {
-		return nil, err
+	if e != nil {
+		return nil, e
 	}
 
 	return res, nil
 }
 
-func (gd *GoogleDrive) Patch(url string, model interface{}) (*http.Response, error) {
-	res, err := gd.oAuth2.Patch(url, nil, model)
+func (gd *GoogleDrive) Patch(url string, model interface{}) (*http.Response, *errortools.Error) {
+	_, res, e := gd.oAuth2.Patch(url, nil, model, nil)
 
-	if err != nil {
-		return nil, err
+	if e != nil {
+		return nil, e
 	}
 
 	return res, nil
