@@ -5,6 +5,7 @@ import (
 
 	bigquerytools "github.com/leapforce-libraries/go_bigquerytools"
 	errortools "github.com/leapforce-libraries/go_errortools"
+	google "github.com/leapforce-libraries/go_google"
 	oauth2 "github.com/leapforce-libraries/go_oauth2"
 )
 
@@ -50,9 +51,14 @@ func (gd *GoogleDrive) InitToken() *errortools.Error {
 }
 
 func (gd *GoogleDrive) Get(url string, model interface{}) (*http.Response, *errortools.Error) {
+	err := google.ErrorResponse{}
 	_, res, e := gd.oAuth2.Get(url, model, nil)
 
 	if e != nil {
+		if err.Error.Message != "" {
+			e.SetMessage(err.Error.Message)
+		}
+
 		return nil, e
 	}
 
@@ -60,9 +66,14 @@ func (gd *GoogleDrive) Get(url string, model interface{}) (*http.Response, *erro
 }
 
 func (gd *GoogleDrive) Patch(url string, model interface{}) (*http.Response, *errortools.Error) {
+	err := google.ErrorResponse{}
 	_, res, e := gd.oAuth2.Patch(url, nil, model, nil)
 
 	if e != nil {
+		if err.Error.Message != "" {
+			e.SetMessage(err.Error.Message)
+		}
+
 		return nil, e
 	}
 
