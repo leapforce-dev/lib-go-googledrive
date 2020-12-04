@@ -25,7 +25,7 @@ type GoogleDrive struct {
 
 // methods
 //
-func NewGoogleDrive(clientID string, clientSecret string, scope string, bigQuery *bigquerytools.BigQuery, isLive bool) *GoogleDrive {
+func NewGoogleDrive(clientID string, clientSecret string, scope string, bigQuery *bigquerytools.BigQuery) *GoogleDrive {
 	gd := GoogleDrive{}
 	config := oauth2.OAuth2Config{
 		ApiName:         apiName,
@@ -37,7 +37,7 @@ func NewGoogleDrive(clientID string, clientSecret string, scope string, bigQuery
 		TokenURL:        tokenURL,
 		TokenHTTPMethod: tokenHTTPMethod,
 	}
-	gd.oAuth2 = oauth2.NewOAuth(config, bigQuery, isLive)
+	gd.oAuth2 = oauth2.NewOAuth(config, bigQuery)
 	return &gd
 }
 
