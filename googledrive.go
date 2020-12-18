@@ -29,7 +29,7 @@ type GoogleDrive struct {
 func NewGoogleDrive(clientID string, clientSecret string, scope string, bigQuery *bigquerytools.BigQuery) *GoogleDrive {
 	gd := GoogleDrive{}
 	config := oauth2.OAuth2Config{
-		ApiName:         apiName,
+		APIName:         apiName,
 		ClientID:        clientID,
 		ClientSecret:    clientSecret,
 		Scope:           scope,
