@@ -47,7 +47,7 @@ func (gd *GoogleDrive) GetFiles(driveID *string, mimeType *string) (*[]File, *er
 
 	filesReponse := FilesResponse{}
 
-	_, e := gd.Get(url, &filesReponse)
+	_, _, e := gd.Client.Get(url, &filesReponse)
 	if e != nil {
 		return nil, e
 	}
@@ -61,7 +61,7 @@ func (gd *GoogleDrive) GetFile(fileID string) (*File, *errortools.Error) {
 
 	file := File{}
 
-	_, e := gd.Get(url, &file)
+	_, _, e := gd.Client.Get(url, &file)
 	if e != nil {
 		return nil, e
 	}
@@ -73,7 +73,7 @@ func (gd *GoogleDrive) DownloadFile(fileID string) (*http.Response, *errortools.
 	url := fmt.Sprintf("%s/files/%s?alt=media", apiURL, fileID)
 	//fmt.Println(url)
 
-	res, e := gd.Get(url, nil)
+	_, res, e := gd.Client.Get(url, nil)
 	if e != nil {
 		return nil, e
 	}
@@ -85,7 +85,7 @@ func (gd *GoogleDrive) MoveFile(fileID string, fromDriveID string, toDriveID str
 	url := fmt.Sprintf("%s/files/%s?uploadType=media&addParents=%s&removeParents=%s", apiURL, fileID, toDriveID, fromDriveID)
 	//fmt.Println(url)
 
-	res, e := gd.Patch(url, nil)
+	_, res, e := gd.Client.Patch(url, nil, nil)
 	if e != nil {
 		return nil, e
 	}
@@ -97,7 +97,7 @@ func (gd *GoogleDrive) ExportFile(fileID string, mimeType string) (*http.Respons
 	url := fmt.Sprintf("%s/files/%s/export?mimeType=%s", apiURL, fileID, mimeType)
 	//fmt.Println(url)
 
-	res, e := gd.Get(url, nil)
+	_, res, e := gd.Client.Get(url, nil)
 	if e != nil {
 		return nil, e
 	}
