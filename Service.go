@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	APIName string = "Service"
+	APIName string = "GoogleDrive"
 	APIURL  string = "https://www.googleapis.com/drive/v3"
 )
 
