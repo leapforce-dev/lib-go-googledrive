@@ -1,4 +1,4 @@
-package GoogleDrive
+package googledrive
 
 import (
 	"fmt"
@@ -26,7 +26,7 @@ type File struct {
 	Parents           []string `json:"parents"`
 }
 
-func (gd *GoogleDrive) GetFiles(driveID *string, mimeType *string) (*[]File, *errortools.Error) {
+func (service *Service) GetFiles(driveID *string, mimeType *string) (*[]File, *errortools.Error) {
 	q := ""
 	filters := []string{}
 
@@ -42,12 +42,12 @@ func (gd *GoogleDrive) GetFiles(driveID *string, mimeType *string) (*[]File, *er
 		q = strings.Join(filters, " and ")
 	}
 
-	url := fmt.Sprintf("%s/files?q=%s", apiURL, url.QueryEscape(q))
+	url := fmt.Sprintf("%s/files?q=%s", APIURL, url.QueryEscape(q))
 	//fmt.Println(url)
 
 	filesReponse := FilesResponse{}
 
-	_, _, e := gd.Client.Get(url, &filesReponse)
+	_, _, e := service.googleService.Get(url, &filesReponse)
 	if e != nil {
 		return nil, e
 	}
@@ -55,13 +55,13 @@ func (gd *GoogleDrive) GetFiles(driveID *string, mimeType *string) (*[]File, *er
 	return &filesReponse.Files, nil
 }
 
-func (gd *GoogleDrive) GetFile(fileID string) (*File, *errortools.Error) {
-	url := fmt.Sprintf("%s/files/%s", apiURL, fileID)
+func (service *Service) GetFile(fileID string) (*File, *errortools.Error) {
+	url := fmt.Sprintf("%s/files/%s", APIURL, fileID)
 	//fmt.Println(url)
 
 	file := File{}
 
-	_, _, e := gd.Client.Get(url, &file)
+	_, _, e := service.googleService.Get(url, &file)
 	if e != nil {
 		return nil, e
 	}
@@ -69,11 +69,11 @@ func (gd *GoogleDrive) GetFile(fileID string) (*File, *errortools.Error) {
 	return &file, nil
 }
 
-func (gd *GoogleDrive) DownloadFile(fileID string) (*http.Response, *errortools.Error) {
-	url := fmt.Sprintf("%s/files/%s?alt=media", apiURL, fileID)
+func (service *Service) DownloadFile(fileID string) (*http.Response, *errortools.Error) {
+	url := fmt.Sprintf("%s/files/%s?alt=media", APIURL, fileID)
 	//fmt.Println(url)
 
-	_, res, e := gd.Client.Get(url, nil)
+	_, res, e := service.googleService.Get(url, nil)
 	if e != nil {
 		return nil, e
 	}
@@ -81,11 +81,11 @@ func (gd *GoogleDrive) DownloadFile(fileID string) (*http.Response, *errortools.
 	return res, nil
 }
 
-func (gd *GoogleDrive) MoveFile(fileID string, fromDriveID string, toDriveID string) (*http.Response, *errortools.Error) {
-	url := fmt.Sprintf("%s/files/%s?uploadType=media&addParents=%s&removeParents=%s", apiURL, fileID, toDriveID, fromDriveID)
+func (service *Service) MoveFile(fileID string, fromDriveID string, toDriveID string) (*http.Response, *errortools.Error) {
+	url := fmt.Sprintf("%s/files/%s?uploadType=media&addParents=%s&removeParents=%s", APIURL, fileID, toDriveID, fromDriveID)
 	//fmt.Println(url)
 
-	_, res, e := gd.Client.Patch(url, nil, nil)
+	_, res, e := service.googleService.Patch(url, nil, nil)
 	if e != nil {
 		return nil, e
 	}
@@ -93,11 +93,11 @@ func (gd *GoogleDrive) MoveFile(fileID string, fromDriveID string, toDriveID str
 	return res, nil
 }
 
-func (gd *GoogleDrive) ExportFile(fileID string, mimeType string) (*http.Response, *errortools.Error) {
-	url := fmt.Sprintf("%s/files/%s/export?mimeType=%s", apiURL, fileID, mimeType)
+func (service *Service) ExportFile(fileID string, mimeType string) (*http.Response, *errortools.Error) {
+	url := fmt.Sprintf("%s/files/%s/export?mimeType=%s", APIURL, fileID, mimeType)
 	//fmt.Println(url)
 
-	_, res, e := gd.Client.Get(url, nil)
+	_, res, e := service.googleService.Get(url, nil)
 	if e != nil {
 		return nil, e
 	}
