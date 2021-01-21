@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
+	oauth2 "github.com/leapforce-libraries/go_oauth2"
 )
 
 type FilesResponse struct {
@@ -42,12 +43,13 @@ func (service *Service) GetFiles(driveID *string, mimeType *string) (*[]File, *e
 		q = strings.Join(filters, " and ")
 	}
 
-	url := fmt.Sprintf("%s/files?q=%s", APIURL, url.QueryEscape(q))
-	//fmt.Println(url)
-
 	filesReponse := FilesResponse{}
 
-	_, _, e := service.googleService.Get(url, &filesReponse)
+	requestConfig := oauth2.RequestConfig{
+		URL:           service.url(fmt.Sprintf("files?q=%s", url.QueryEscape(q))),
+		ResponseModel: &filesReponse,
+	}
+	_, _, e := service.googleService.Get(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -56,12 +58,13 @@ func (service *Service) GetFiles(driveID *string, mimeType *string) (*[]File, *e
 }
 
 func (service *Service) GetFile(fileID string) (*File, *errortools.Error) {
-	url := fmt.Sprintf("%s/files/%s", APIURL, fileID)
-	//fmt.Println(url)
-
 	file := File{}
 
-	_, _, e := service.googleService.Get(url, &file)
+	requestConfig := oauth2.RequestConfig{
+		URL:           service.url(fmt.Sprintf("files/%s", fileID)),
+		ResponseModel: &file,
+	}
+	_, _, e := service.googleService.Get(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -70,10 +73,10 @@ func (service *Service) GetFile(fileID string) (*File, *errortools.Error) {
 }
 
 func (service *Service) DownloadFile(fileID string) (*http.Response, *errortools.Error) {
-	url := fmt.Sprintf("%s/files/%s?alt=media", APIURL, fileID)
-	//fmt.Println(url)
-
-	_, res, e := service.googleService.Get(url, nil)
+	requestConfig := oauth2.RequestConfig{
+		URL: service.url(fmt.Sprintf("files/%s?alt=media", fileID)),
+	}
+	_, res, e := service.googleService.Get(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -82,10 +85,10 @@ func (service *Service) DownloadFile(fileID string) (*http.Response, *errortools
 }
 
 func (service *Service) MoveFile(fileID string, fromDriveID string, toDriveID string) (*http.Response, *errortools.Error) {
-	url := fmt.Sprintf("%s/files/%s?uploadType=media&addParents=%s&removeParents=%s", APIURL, fileID, toDriveID, fromDriveID)
-	//fmt.Println(url)
-
-	_, res, e := service.googleService.Patch(url, nil, nil)
+	requestConfig := oauth2.RequestConfig{
+		URL: service.url(fmt.Sprintf("files/%s?uploadType=media&addParents=%s&removeParents=%s", fileID, toDriveID, fromDriveID)),
+	}
+	_, res, e := service.googleService.Patch(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -94,10 +97,11 @@ func (service *Service) MoveFile(fileID string, fromDriveID string, toDriveID st
 }
 
 func (service *Service) ExportFile(fileID string, mimeType string) (*http.Response, *errortools.Error) {
-	url := fmt.Sprintf("%s/files/%s/export?mimeType=%s", APIURL, fileID, mimeType)
-	//fmt.Println(url)
+	requestConfig := oauth2.RequestConfig{
+		URL: service.url(fmt.Sprintf("files/%s/export?mimeType=%s", fileID, mimeType)),
+	}
 
-	_, res, e := service.googleService.Get(url, nil)
+	_, res, e := service.googleService.Get(&requestConfig)
 	if e != nil {
 		return nil, e
 	}

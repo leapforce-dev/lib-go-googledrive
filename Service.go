@@ -1,8 +1,11 @@
 package googledrive
 
 import (
+	"fmt"
+
 	errortools "github.com/leapforce-libraries/go_errortools"
 	google "github.com/leapforce-libraries/go_google"
+	bigquery "github.com/leapforce-libraries/go_google/bigquery"
 )
 
 const (
@@ -18,7 +21,7 @@ type Service struct {
 
 // methods
 //
-func NewService(clientID string, clientSecret string, scope string, bigQuery *google.BigQuery) *Service {
+func NewService(clientID string, clientSecret string, scope string, bigQueryService *bigquery.Service) *Service {
 	config := google.ServiceConfig{
 		APIName:      APIName,
 		ClientID:     clientID,
@@ -26,9 +29,13 @@ func NewService(clientID string, clientSecret string, scope string, bigQuery *go
 		Scope:        scope,
 	}
 
-	googleService := google.NewService(config, bigQuery)
+	googleService := google.NewService(config, bigQueryService)
 
 	return &Service{googleService}
+}
+
+func (service *Service) url(path string) string {
+	return fmt.Sprintf("%s/%s", APIURL, path)
 }
 
 func (service *Service) InitToken() *errortools.Error {
