@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
-	oauth2 "github.com/leapforce-libraries/go_oauth2"
+	go_http "github.com/leapforce-libraries/go_http"
 )
 
 type FilesResponse struct {
@@ -45,7 +45,7 @@ func (service *Service) GetFiles(driveID *string, mimeType *string) (*[]File, *e
 
 	filesReponse := FilesResponse{}
 
-	requestConfig := oauth2.RequestConfig{
+	requestConfig := go_http.RequestConfig{
 		URL:           service.url(fmt.Sprintf("files?q=%s", url.QueryEscape(q))),
 		ResponseModel: &filesReponse,
 	}
@@ -60,7 +60,7 @@ func (service *Service) GetFiles(driveID *string, mimeType *string) (*[]File, *e
 func (service *Service) GetFile(fileID string) (*File, *errortools.Error) {
 	file := File{}
 
-	requestConfig := oauth2.RequestConfig{
+	requestConfig := go_http.RequestConfig{
 		URL:           service.url(fmt.Sprintf("files/%s", fileID)),
 		ResponseModel: &file,
 	}
@@ -73,7 +73,7 @@ func (service *Service) GetFile(fileID string) (*File, *errortools.Error) {
 }
 
 func (service *Service) DownloadFile(fileID string) (*http.Response, *errortools.Error) {
-	requestConfig := oauth2.RequestConfig{
+	requestConfig := go_http.RequestConfig{
 		URL: service.url(fmt.Sprintf("files/%s?alt=media", fileID)),
 	}
 	_, res, e := service.googleService.Get(&requestConfig)
@@ -85,7 +85,7 @@ func (service *Service) DownloadFile(fileID string) (*http.Response, *errortools
 }
 
 func (service *Service) MoveFile(fileID string, fromDriveID string, toDriveID string) (*http.Response, *errortools.Error) {
-	requestConfig := oauth2.RequestConfig{
+	requestConfig := go_http.RequestConfig{
 		URL: service.url(fmt.Sprintf("files/%s?uploadType=media&addParents=%s&removeParents=%s", fileID, toDriveID, fromDriveID)),
 	}
 	_, res, e := service.googleService.Patch(&requestConfig)
@@ -97,7 +97,7 @@ func (service *Service) MoveFile(fileID string, fromDriveID string, toDriveID st
 }
 
 func (service *Service) ExportFile(fileID string, mimeType string) (*http.Response, *errortools.Error) {
-	requestConfig := oauth2.RequestConfig{
+	requestConfig := go_http.RequestConfig{
 		URL: service.url(fmt.Sprintf("files/%s/export?mimeType=%s", fileID, mimeType)),
 	}
 
