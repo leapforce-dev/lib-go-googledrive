@@ -16,6 +16,7 @@ const (
 // Service stores Service configuration
 //
 type Service struct {
+	clientID      string
 	googleService *google.Service
 }
 
@@ -45,10 +46,14 @@ func NewService(serviceConfig *ServiceConfig, bigQueryService *bigquery.Service)
 		Scope:        serviceConfig.Scope,
 	}
 
-	googleService := google.NewService(googleServiceConfig, bigQueryService)
+	googleService, e := google.NewService(&googleServiceConfig, bigQueryService)
+	if e != nil {
+		return nil, e
+	}
 
 	return &Service{
-		googleService,
+		clientID:      serviceConfig.ClientID,
+		googleService: googleService,
 	}, nil
 }
 
@@ -58,4 +63,20 @@ func (service *Service) url(path string) string {
 
 func (service *Service) InitToken() *errortools.Error {
 	return service.googleService.InitToken()
+}
+
+func (service *Service) APIName() string {
+	return apiName
+}
+
+func (service *Service) APIKey() string {
+	return service.clientID
+}
+
+func (service *Service) APICallCount() int64 {
+	return service.googleService.APICallCount()
+}
+
+func (service *Service) APIReset() {
+	service.googleService.APIReset()
 }
