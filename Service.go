@@ -13,8 +13,6 @@ const (
 	apiURL  string = "https://www.googleapis.com/drive/v3"
 )
 
-// Service stores Service configuration
-//
 type Service struct {
 	clientID      string
 	googleService *google.Service
@@ -43,7 +41,6 @@ func NewService(serviceConfig *ServiceConfig, bigQueryService *bigquery.Service)
 		APIName:      apiName,
 		ClientID:     serviceConfig.ClientID,
 		ClientSecret: serviceConfig.ClientSecret,
-		Scope:        serviceConfig.Scope,
 	}
 
 	googleService, e := google.NewService(&googleServiceConfig, bigQueryService)
@@ -61,8 +58,8 @@ func (service *Service) url(path string) string {
 	return fmt.Sprintf("%s/%s", apiURL, path)
 }
 
-func (service *Service) InitToken() *errortools.Error {
-	return service.googleService.InitToken()
+func (service *Service) InitToken(scope string) *errortools.Error {
+	return service.googleService.InitToken(scope)
 }
 
 func (service *Service) APIName() string {
