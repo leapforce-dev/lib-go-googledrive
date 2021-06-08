@@ -108,3 +108,51 @@ func (service *Service) ExportFile(fileID string, mimeType string) (*http.Respon
 
 	return res, nil
 }
+
+func (service *Service) CreateFile(parentID string, name string, mimeType string) (*File, *errortools.Error) {
+	data := struct {
+		MimeType string   `json:"mimeType"`
+		Name     string   `json:"name"`
+		Parents  []string `json:"parents"`
+	}{
+		mimeType,
+		name,
+		[]string{parentID},
+	}
+
+	file := File{}
+
+	requestConfig := go_http.RequestConfig{
+		URL:           service.url("files"),
+		BodyModel:     data,
+		ResponseModel: &file,
+	}
+
+	_, _, e := service.googleService.Post(&requestConfig)
+	if e != nil {
+		return nil, e
+	}
+
+	return &file, nil
+}
+
+func (service *Service) UpdateFile(fileID string, mimeType string, content *[]byte) (*File, *errortools.Error) {
+	file := File{}
+
+	header := http.Header{}
+	header.Set("Content-Type", mimeType)
+
+	requestConfig := go_http.RequestConfig{
+		URL:               fmt.Sprintf("https://www.googleapis.com/upload/drive/v3/files/%s", fileID),
+		BodyRaw:           content,
+		ResponseModel:     &file,
+		NonDefaultHeaders: &header,
+	}
+
+	_, _, e := service.googleService.Patch(&requestConfig)
+	if e != nil {
+		return nil, e
+	}
+
+	return &file, nil
+}
