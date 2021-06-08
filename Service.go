@@ -21,7 +21,6 @@ type Service struct {
 type ServiceConfig struct {
 	ClientID     string
 	ClientSecret string
-	Scope        string
 }
 
 func NewService(serviceConfig *ServiceConfig, bigQueryService *bigquery.Service) (*Service, *errortools.Error) {
