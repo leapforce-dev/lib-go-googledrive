@@ -46,10 +46,11 @@ func (service *Service) GetFiles(driveID *string, mimeType *string) (*[]File, *e
 	filesReponse := FilesResponse{}
 
 	requestConfig := go_http.RequestConfig{
+		Method:        http.MethodGet,
 		URL:           service.url(fmt.Sprintf("files?q=%s", url.QueryEscape(q))),
 		ResponseModel: &filesReponse,
 	}
-	_, _, e := service.googleService.Get(&requestConfig)
+	_, _, e := service.googleService.HTTPRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -61,10 +62,11 @@ func (service *Service) GetFile(fileID string) (*File, *errortools.Error) {
 	file := File{}
 
 	requestConfig := go_http.RequestConfig{
+		Method:        http.MethodGet,
 		URL:           service.url(fmt.Sprintf("files/%s", fileID)),
 		ResponseModel: &file,
 	}
-	_, _, e := service.googleService.Get(&requestConfig)
+	_, _, e := service.googleService.HTTPRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -74,9 +76,10 @@ func (service *Service) GetFile(fileID string) (*File, *errortools.Error) {
 
 func (service *Service) DownloadFile(fileID string) (*http.Response, *errortools.Error) {
 	requestConfig := go_http.RequestConfig{
-		URL: service.url(fmt.Sprintf("files/%s?alt=media", fileID)),
+		Method: http.MethodGet,
+		URL:    service.url(fmt.Sprintf("files/%s?alt=media", fileID)),
 	}
-	_, res, e := service.googleService.Get(&requestConfig)
+	_, res, e := service.googleService.HTTPRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -86,9 +89,10 @@ func (service *Service) DownloadFile(fileID string) (*http.Response, *errortools
 
 func (service *Service) MoveFile(fileID string, fromDriveID string, toDriveID string) (*http.Response, *errortools.Error) {
 	requestConfig := go_http.RequestConfig{
-		URL: service.url(fmt.Sprintf("files/%s?uploadType=media&addParents=%s&removeParents=%s", fileID, toDriveID, fromDriveID)),
+		Method: http.MethodPatch,
+		URL:    service.url(fmt.Sprintf("files/%s?uploadType=media&addParents=%s&removeParents=%s", fileID, toDriveID, fromDriveID)),
 	}
-	_, res, e := service.googleService.Patch(&requestConfig)
+	_, res, e := service.googleService.HTTPRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -98,10 +102,11 @@ func (service *Service) MoveFile(fileID string, fromDriveID string, toDriveID st
 
 func (service *Service) ExportFile(fileID string, mimeType string) (*http.Response, *errortools.Error) {
 	requestConfig := go_http.RequestConfig{
-		URL: service.url(fmt.Sprintf("files/%s/export?mimeType=%s", fileID, mimeType)),
+		Method: http.MethodGet,
+		URL:    service.url(fmt.Sprintf("files/%s/export?mimeType=%s", fileID, mimeType)),
 	}
 
-	_, res, e := service.googleService.Get(&requestConfig)
+	_, res, e := service.googleService.HTTPRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -123,12 +128,13 @@ func (service *Service) CreateFile(parentID string, name string, mimeType string
 	file := File{}
 
 	requestConfig := go_http.RequestConfig{
+		Method:        http.MethodPost,
 		URL:           service.url("files"),
 		BodyModel:     data,
 		ResponseModel: &file,
 	}
 
-	_, _, e := service.googleService.Post(&requestConfig)
+	_, _, e := service.googleService.HTTPRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -143,13 +149,14 @@ func (service *Service) UpdateFile(fileID string, mimeType string, content *[]by
 	header.Set("Content-Type", mimeType)
 
 	requestConfig := go_http.RequestConfig{
+		Method:            http.MethodPatch,
 		URL:               fmt.Sprintf("https://www.googleapis.com/upload/drive/v3/files/%s", fileID),
 		BodyRaw:           content,
 		ResponseModel:     &file,
 		NonDefaultHeaders: &header,
 	}
 
-	_, _, e := service.googleService.Patch(&requestConfig)
+	_, _, e := service.googleService.HTTPRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
