@@ -33,10 +33,6 @@ func NewService(serviceConfig *ServiceConfig) (*Service, *errortools.Error) {
 		return nil, errortools.ErrorMessage("ClientID not provided")
 	}
 
-	if serviceConfig.ClientSecret == "" {
-		return nil, errortools.ErrorMessage("ClientSecret not provided")
-	}
-
 	googleServiceConfig := google.ServiceConfig{
 		APIName:      apiName,
 		ClientID:     serviceConfig.ClientID,
