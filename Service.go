@@ -5,7 +5,6 @@ import (
 
 	errortools "github.com/leapforce-libraries/go_errortools"
 	google "github.com/leapforce-libraries/go_google"
-	bigquery "github.com/leapforce-libraries/go_google/bigquery"
 	"github.com/leapforce-libraries/go_oauth2/tokensource"
 )
 
@@ -25,7 +24,7 @@ type ServiceConfig struct {
 	TokenSource  tokensource.TokenSource
 }
 
-func NewService(serviceConfig *ServiceConfig, bigQueryService *bigquery.Service) (*Service, *errortools.Error) {
+func NewService(serviceConfig *ServiceConfig) (*Service, *errortools.Error) {
 	if serviceConfig == nil {
 		return nil, errortools.ErrorMessage("ServiceConfig must not be a nil pointer")
 	}
@@ -45,7 +44,7 @@ func NewService(serviceConfig *ServiceConfig, bigQueryService *bigquery.Service)
 		TokenSource:  serviceConfig.TokenSource,
 	}
 
-	googleService, e := google.NewService(&googleServiceConfig, bigQueryService)
+	googleService, e := google.NewService(&googleServiceConfig)
 	if e != nil {
 		return nil, e
 	}
