@@ -6,6 +6,7 @@ import (
 	errortools "github.com/leapforce-libraries/go_errortools"
 	google "github.com/leapforce-libraries/go_google"
 	bigquery "github.com/leapforce-libraries/go_google/bigquery"
+	"github.com/leapforce-libraries/go_oauth2/tokensource"
 )
 
 const (
@@ -21,6 +22,7 @@ type Service struct {
 type ServiceConfig struct {
 	ClientID     string
 	ClientSecret string
+	TokenSource  tokensource.TokenSource
 }
 
 func NewService(serviceConfig *ServiceConfig, bigQueryService *bigquery.Service) (*Service, *errortools.Error) {
@@ -40,6 +42,7 @@ func NewService(serviceConfig *ServiceConfig, bigQueryService *bigquery.Service)
 		APIName:      apiName,
 		ClientID:     serviceConfig.ClientID,
 		ClientSecret: serviceConfig.ClientSecret,
+		TokenSource:  serviceConfig.TokenSource,
 	}
 
 	googleService, e := google.NewService(&googleServiceConfig, bigQueryService)
