@@ -64,7 +64,7 @@ func (service *Service) APIName() string {
 }
 
 func (service *Service) APIKey() string {
-	return service.clientID
+	return google.ClientIDShort(service.clientID)
 }
 
 func (service *Service) APICallCount() int64 {
