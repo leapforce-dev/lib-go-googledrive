@@ -28,7 +28,7 @@ func (service *Service) GetAbout(fields string) (*About, *errortools.Error) {
 		URL:           service.url(fmt.Sprintf("about?fields=%s", fields)),
 		ResponseModel: &about,
 	}
-	_, _, e := service.googleService.HTTPRequest(&requestConfig)
+	_, _, e := service.googleService().HttpRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}

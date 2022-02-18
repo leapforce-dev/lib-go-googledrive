@@ -416,6 +416,8 @@ github.com/leapforce-libraries/go_google v0.0.0-20220204101041-2deaf765a434 h1:s
 github.com/leapforce-libraries/go_google v0.0.0-20220204101041-2deaf765a434/go.mod h1:WZvFkSebevzX0fbPXDMKz16Cc2+3kM7atJnvY/zPjjg=
 github.com/leapforce-libraries/go_google v0.0.0-20220214135941-05c82f853001 h1:eViLB46ngPBAKUkBptkUus+PqEU/ekJbp47qpklB0tw=
 github.com/leapforce-libraries/go_google v0.0.0-20220214135941-05c82f853001/go.mod h1:fbQV3wE5/SJK53gaiC1dKy0TCY7maaCuORQRT8t3ML8=
+github.com/leapforce-libraries/go_google v0.0.0-20220218134916-b824322f36eb h1:Vn6IKHisvmRpRq5/HsCV29+cQbJK8AuRFFjzQLAEt0A=
+github.com/leapforce-libraries/go_google v0.0.0-20220218134916-b824322f36eb/go.mod h1:fbQV3wE5/SJK53gaiC1dKy0TCY7maaCuORQRT8t3ML8=
 github.com/leapforce-libraries/go_googlecloudstorage v0.0.0-20210428222229-1147c7986a8d/go.mod h1:5vTKz3d/EqR85Ge5dN6+emiKfMDh73mibAQRs7wQz8k=
 github.com/leapforce-libraries/go_googlecloudstorage v0.0.0-20210512105628-d07f5f4332c1 h1:mI+rNmq/Y6va2epFYmEPlE7XNI3AinLe93DzjDamJu0=
 github.com/leapforce-libraries/go_googlecloudstorage v0.0.0-20210512105628-d07f5f4332c1/go.mod h1:5vTKz3d/EqR85Ge5dN6+emiKfMDh73mibAQRs7wQz8k=
@@ -507,6 +509,7 @@ github.com/leapforce-libraries/go_oauth2 v0.0.0-20211007110355-fa8b3b6f9118 h1:1
 github.com/leapforce-libraries/go_oauth2 v0.0.0-20211007110355-fa8b3b6f9118/go.mod h1:KbfdShvVAerXWgSpHGqUvJMQmh0vKu/ONWWI/J57R6M=
 github.com/leapforce-libraries/go_oauth2 v0.0.0-20220131162209-3fde6a5a969b h1:vKjcSNWlWOldZclzzkV24MnUPBQ4PxnCZBXqc7NPXC8=
 github.com/leapforce-libraries/go_oauth2 v0.0.0-20220131162209-3fde6a5a969b/go.mod h1:EY+80OxzHAhHZbt3zuy3nOqmrmUZ6by/QUXMj6Hd6gU=
+github.com/leapforce-libraries/go_oauth2 v0.0.0-20220214133004-95ea8dd909ec h1:xmoI3n4DIDRwSEjoyXr41IxBxA30b2ITe5sLl6Cnc6g=
 github.com/leapforce-libraries/go_oauth2 v0.0.0-20220214133004-95ea8dd909ec/go.mod h1:EY+80OxzHAhHZbt3zuy3nOqmrmUZ6by/QUXMj6Hd6gU=
 github.com/leapforce-libraries/go_oauth2 v0.0.0-20220214135519-59283a8ebc89 h1:3/fueWB1meJRDQ4SRRNF/9TaUq38dVCDM5wRUXfHRlk=
 github.com/leapforce-libraries/go_oauth2 v0.0.0-20220214135519-59283a8ebc89/go.mod h1:EY+80OxzHAhHZbt3zuy3nOqmrmUZ6by/QUXMj6Hd6gU=

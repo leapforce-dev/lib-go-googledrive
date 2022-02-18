@@ -50,7 +50,7 @@ func (service *Service) GetFiles(driveID *string, mimeType *string) (*[]File, *e
 		URL:           service.url(fmt.Sprintf("files?q=%s", url.QueryEscape(q))),
 		ResponseModel: &filesReponse,
 	}
-	_, _, e := service.googleService.HTTPRequest(&requestConfig)
+	_, _, e := service.googleService().HttpRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -66,7 +66,7 @@ func (service *Service) GetFile(fileID string) (*File, *errortools.Error) {
 		URL:           service.url(fmt.Sprintf("files/%s", fileID)),
 		ResponseModel: &file,
 	}
-	_, _, e := service.googleService.HTTPRequest(&requestConfig)
+	_, _, e := service.googleService().HttpRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -79,7 +79,7 @@ func (service *Service) DownloadFile(fileID string) (*http.Response, *errortools
 		Method: http.MethodGet,
 		URL:    service.url(fmt.Sprintf("files/%s?alt=media", fileID)),
 	}
-	_, res, e := service.googleService.HTTPRequest(&requestConfig)
+	_, res, e := service.googleService().HttpRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -92,7 +92,7 @@ func (service *Service) MoveFile(fileID string, fromDriveID string, toDriveID st
 		Method: http.MethodPatch,
 		URL:    service.url(fmt.Sprintf("files/%s?uploadType=media&addParents=%s&removeParents=%s", fileID, toDriveID, fromDriveID)),
 	}
-	_, res, e := service.googleService.HTTPRequest(&requestConfig)
+	_, res, e := service.googleService().HttpRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -106,7 +106,7 @@ func (service *Service) ExportFile(fileID string, mimeType string) (*http.Respon
 		URL:    service.url(fmt.Sprintf("files/%s/export?mimeType=%s", fileID, mimeType)),
 	}
 
-	_, res, e := service.googleService.HTTPRequest(&requestConfig)
+	_, res, e := service.googleService().HttpRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -134,7 +134,7 @@ func (service *Service) CreateFile(parentID string, name string, mimeType string
 		ResponseModel: &file,
 	}
 
-	_, _, e := service.googleService.HTTPRequest(&requestConfig)
+	_, _, e := service.googleService().HttpRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
@@ -156,7 +156,7 @@ func (service *Service) UpdateFile(fileID string, mimeType string, content *[]by
 		NonDefaultHeaders: &header,
 	}
 
-	_, _, e := service.googleService.HTTPRequest(&requestConfig)
+	_, _, e := service.googleService().HttpRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
