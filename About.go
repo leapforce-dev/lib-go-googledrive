@@ -1,8 +1,8 @@
 package googledrive
 
 import (
-	"fmt"
 	"net/http"
+	"net/url"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
 	go_http "github.com/leapforce-libraries/go_http"
@@ -21,11 +21,15 @@ type About struct {
 }
 
 func (service *Service) GetAbout(fields string) (*About, *errortools.Error) {
+	values := url.Values{}
+	values.Set("fields", fields)
+
 	about := About{}
 
 	requestConfig := go_http.RequestConfig{
 		Method:        http.MethodGet,
-		URL:           service.url(fmt.Sprintf("about?fields=%s", fields)),
+		URL:           service.url("about"),
+		Parameters:    &values,
 		ResponseModel: &about,
 	}
 	_, _, e := service.googleService().HttpRequest(&requestConfig)

@@ -43,11 +43,15 @@ func (service *Service) GetFiles(driveID *string, mimeType *string) (*[]File, *e
 		q = strings.Join(filters, " and ")
 	}
 
+	values := url.Values{}
+	values.Set("q", q)
+
 	filesReponse := FilesResponse{}
 
 	requestConfig := go_http.RequestConfig{
 		Method:        http.MethodGet,
-		URL:           service.url(fmt.Sprintf("files?q=%s", url.QueryEscape(q))),
+		URL:           service.url("files"),
+		Parameters:    &values,
 		ResponseModel: &filesReponse,
 	}
 	_, _, e := service.googleService().HttpRequest(&requestConfig)
@@ -75,9 +79,13 @@ func (service *Service) GetFile(fileID string) (*File, *errortools.Error) {
 }
 
 func (service *Service) DownloadFile(fileID string) (*http.Response, *errortools.Error) {
+	values := url.Values{}
+	values.Set("alt", "media")
+
 	requestConfig := go_http.RequestConfig{
-		Method: http.MethodGet,
-		URL:    service.url(fmt.Sprintf("files/%s?alt=media", fileID)),
+		Method:     http.MethodGet,
+		URL:        service.url(fmt.Sprintf("files/%s", fileID)),
+		Parameters: &values,
 	}
 	_, res, e := service.googleService().HttpRequest(&requestConfig)
 	if e != nil {
@@ -88,9 +96,15 @@ func (service *Service) DownloadFile(fileID string) (*http.Response, *errortools
 }
 
 func (service *Service) MoveFile(fileID string, fromDriveID string, toDriveID string) (*http.Response, *errortools.Error) {
+	values := url.Values{}
+	values.Set("uploadType", "media")
+	values.Set("addParents", toDriveID)
+	values.Set("removeParents", fromDriveID)
+
 	requestConfig := go_http.RequestConfig{
-		Method: http.MethodPatch,
-		URL:    service.url(fmt.Sprintf("files/%s?uploadType=media&addParents=%s&removeParents=%s", fileID, toDriveID, fromDriveID)),
+		Method:     http.MethodPatch,
+		URL:        service.url(fmt.Sprintf("files/%s", fileID)),
+		Parameters: &values,
 	}
 	_, res, e := service.googleService().HttpRequest(&requestConfig)
 	if e != nil {
@@ -101,9 +115,13 @@ func (service *Service) MoveFile(fileID string, fromDriveID string, toDriveID st
 }
 
 func (service *Service) ExportFile(fileID string, mimeType string) (*http.Response, *errortools.Error) {
+	values := url.Values{}
+	values.Set("mimeType", mimeType)
+
 	requestConfig := go_http.RequestConfig{
-		Method: http.MethodGet,
-		URL:    service.url(fmt.Sprintf("files/%s/export?mimeType=%s", fileID, mimeType)),
+		Method:     http.MethodGet,
+		URL:        service.url(fmt.Sprintf("files/%s/export", fileID)),
+		Parameters: &values,
 	}
 
 	_, res, e := service.googleService().HttpRequest(&requestConfig)
