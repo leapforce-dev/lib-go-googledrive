@@ -9,7 +9,7 @@ import (
 
 const (
 	apiName string = "GoogleDrive"
-	apiURL  string = "https://www.googleapis.com/drive/v3"
+	apiUrl  string = "https://www.googleapis.com/drive/v3"
 )
 
 type Service google.Service
@@ -42,7 +42,7 @@ func NewServiceWithOAuth2(cfg *google.ServiceWithOAuth2Config) (*Service, *error
 }
 
 func (service *Service) url(path string) string {
-	return fmt.Sprintf("%s/%s", apiURL, path)
+	return fmt.Sprintf("%s/%s", apiUrl, path)
 }
 
 func (service *Service) ApiName() string {

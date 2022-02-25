@@ -15,7 +15,7 @@ type About struct {
 		DisplayName  string `json:"displayName"`
 		PhotoLink    string `json:"photoLink"`
 		Me           bool   `json:"me"`
-		PermissionID string `json:"permissionId"`
+		PermissionId string `json:"permissionId"`
 		EmailAddress string `json:"emailAddress"`
 	} `json:"user"`
 }
@@ -28,7 +28,7 @@ func (service *Service) GetAbout(fields string) (*About, *errortools.Error) {
 
 	requestConfig := go_http.RequestConfig{
 		Method:        http.MethodGet,
-		URL:           service.url("about"),
+		Url:           service.url("about"),
 		Parameters:    &values,
 		ResponseModel: &about,
 	}
