@@ -27,24 +27,35 @@ type File struct {
 	Parents           []string `json:"parents"`
 }
 
-func (service *Service) GetFiles(driveId *string, mimeType *string) (*[]File, *errortools.Error) {
-	q := ""
+type GetFilesConfig struct {
+	DriveId  *string
+	MimeType *string
+	Trashed  *bool
+}
+
+func (service *Service) GetFiles(config *GetFilesConfig) (*[]File, *errortools.Error) {
+	values := url.Values{}
+
 	filters := []string{}
 
-	if driveId != nil {
-		filters = append(filters, fmt.Sprintf("'%s' in parents", *driveId))
-	}
+	if config != nil {
 
-	if mimeType != nil {
-		filters = append(filters, fmt.Sprintf("mimeType = '%s'", *mimeType))
+		if config.DriveId != nil {
+			filters = append(filters, fmt.Sprintf("'%s' in parents", *config.DriveId))
+		}
+
+		if config.MimeType != nil {
+			filters = append(filters, fmt.Sprintf("mimeType = '%s'", *config.MimeType))
+		}
+
+		if config.Trashed != nil {
+			filters = append(filters, fmt.Sprintf("trashed = %s", fmt.Sprintf("%v", *config.Trashed)))
+		}
 	}
 
 	if len(filters) > 0 {
-		q = strings.Join(filters, " and ")
+		values.Set("q", strings.Join(filters, " and "))
 	}
-
-	values := url.Values{}
-	values.Set("q", q)
 
 	filesReponse := FilesResponse{}
 
