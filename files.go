@@ -12,6 +12,7 @@ import (
 
 type FilesResponse struct {
 	Kind             string `json:"kind"`
+	NextPageToken    string `json:"nextPageToken"`
 	IncompleteSearch bool   `json:"incompleteSearch"`
 	Files            []File `json:"files"`
 }
@@ -29,6 +30,7 @@ type File struct {
 
 type GetFilesConfig struct {
 	DriveId  *string
+	Fields   *string
 	MimeType *string
 	Trashed  *bool
 }
@@ -44,6 +46,10 @@ func (service *Service) GetFiles(config *GetFilesConfig) (*[]File, *errortools.E
 			filters = append(filters, fmt.Sprintf("'%s' in parents", *config.DriveId))
 		}
 
+		if config.Fields != nil {
+			values.Set("fields", *config.Fields)
+		}
+
 		if config.MimeType != nil {
 			filters = append(filters, fmt.Sprintf("mimeType = '%s'", *config.MimeType))
 		}
@@ -57,20 +63,32 @@ func (service *Service) GetFiles(config *GetFilesConfig) (*[]File, *errortools.E
 		values.Set("q", strings.Join(filters, " and "))
 	}
 
-	filesReponse := FilesResponse{}
+	var files []File
 
-	requestConfig := go_http.RequestConfig{
-		Method:        http.MethodGet,
-		Url:           service.url("files"),
-		Parameters:    &values,
-		ResponseModel: &filesReponse,
-	}
-	_, _, e := service.googleService().HttpRequest(&requestConfig)
-	if e != nil {
-		return nil, e
+	for {
+		var filesReponse FilesResponse
+
+		requestConfig := go_http.RequestConfig{
+			Method:        http.MethodGet,
+			Url:           service.url("files"),
+			Parameters:    &values,
+			ResponseModel: &filesReponse,
+		}
+		_, _, e := service.googleService().HttpRequest(&requestConfig)
+		if e != nil {
+			return nil, e
+		}
+
+		files = append(files, filesReponse.Files...)
+
+		if filesReponse.NextPageToken == "" {
+			break
+		}
+
+		values.Set("pageToken", filesReponse.NextPageToken)
 	}
 
-	return &filesReponse.Files, nil
+	return &files, nil
 }
 
 func (service *Service) GetFile(fileId string) (*File, *errortools.Error) {
