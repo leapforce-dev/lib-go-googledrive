@@ -26,6 +26,8 @@ type File struct {
 	Trashed           bool     `json:"trashed"`
 	ExplicitlyTrashed bool     `json:"explicitlyTrashed"`
 	Parents           []string `json:"parents"`
+	Owners            []User   `json:"owners"`
+	WebViewLink       string   `json:"webViewLink"`
 }
 
 type GetFilesConfig struct {
