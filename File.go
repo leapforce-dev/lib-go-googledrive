@@ -31,10 +31,13 @@ type File struct {
 }
 
 type GetFilesConfig struct {
-	DriveId  *string
-	Fields   *string
-	MimeType *string
-	Trashed  *bool
+	DriveId                   *string
+	Fields                    *string
+	MimeType                  *string
+	Trashed                   *bool
+	IncludeItemsFromAllDrives *bool
+	SupportsAllDrives         *bool
+	SupportsTeamDrives        *bool
 }
 
 func (service *Service) GetFiles(config *GetFilesConfig) (*[]File, *errortools.Error) {
@@ -45,7 +48,7 @@ func (service *Service) GetFiles(config *GetFilesConfig) (*[]File, *errortools.E
 	if config != nil {
 
 		if config.DriveId != nil {
-			filters = append(filters, fmt.Sprintf("'%s' in parents", *config.DriveId))
+			filters = append(filters, fmt.Sprintf("\"%s\" in parents", *config.DriveId))
 		}
 
 		if config.Fields != nil {
@@ -59,6 +62,18 @@ func (service *Service) GetFiles(config *GetFilesConfig) (*[]File, *errortools.E
 		if config.Trashed != nil {
 			filters = append(filters, fmt.Sprintf("trashed = %s", fmt.Sprintf("%v", *config.Trashed)))
 		}
+
+		if config.IncludeItemsFromAllDrives != nil {
+			values.Set("includeItemsFromAllDrives", fmt.Sprintf("%v", *config.IncludeItemsFromAllDrives))
+		}
+
+		if config.SupportsAllDrives != nil {
+			values.Set("supportsAllDrives", fmt.Sprintf("%v", *config.SupportsAllDrives))
+		}
+
+		if config.SupportsTeamDrives != nil {
+			values.Set("supportsTeamDrives", fmt.Sprintf("%v", *config.SupportsTeamDrives))
+		}
 	}
 
 	if len(filters) > 0 {
@@ -68,26 +83,26 @@ func (service *Service) GetFiles(config *GetFilesConfig) (*[]File, *errortools.E
 	var files []File
 
 	for {
-		var filesReponse FilesResponse
+		var filesResponse FilesResponse
 
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
 			Url:           service.url("files"),
 			Parameters:    &values,
-			ResponseModel: &filesReponse,
+			ResponseModel: &filesResponse,
 		}
 		_, _, e := service.googleService().HttpRequest(&requestConfig)
 		if e != nil {
 			return nil, e
 		}
 
-		files = append(files, filesReponse.Files...)
+		files = append(files, filesResponse.Files...)
 
-		if filesReponse.NextPageToken == "" {
+		if filesResponse.NextPageToken == "" {
 			break
 		}
 
-		values.Set("pageToken", filesReponse.NextPageToken)
+		values.Set("pageToken", filesResponse.NextPageToken)
 	}
 
 	return &files, nil
@@ -163,7 +178,11 @@ func (service *Service) ExportFile(fileId string, mimeType string) (*http.Respon
 	return res, nil
 }
 
-func (service *Service) CreateFile(parentId string, name string, mimeType string) (*File, *errortools.Error) {
+type CreateFileConfig struct {
+	SupportsAllDrives *bool
+}
+
+func (service *Service) CreateFile(parentId string, name string, mimeType string, config *CreateFileConfig) (*File, *errortools.Error) {
 	data := struct {
 		MimeType string   `json:"mimeType"`
 		Name     string   `json:"name"`
@@ -174,11 +193,20 @@ func (service *Service) CreateFile(parentId string, name string, mimeType string
 		[]string{parentId},
 	}
 
+	values := url.Values{}
+
+	if config != nil {
+		if config.SupportsAllDrives != nil {
+			values.Set("supportsAllDrives", fmt.Sprintf("%v", *config.SupportsAllDrives))
+		}
+	}
+
 	file := File{}
 
 	requestConfig := go_http.RequestConfig{
 		Method:        http.MethodPost,
 		Url:           service.url("files"),
+		Parameters:    &values,
 		BodyModel:     data,
 		ResponseModel: &file,
 	}
@@ -191,15 +219,30 @@ func (service *Service) CreateFile(parentId string, name string, mimeType string
 	return &file, nil
 }
 
-func (service *Service) UpdateFile(fileId string, mimeType string, content *[]byte) (*File, *errortools.Error) {
+type UpdateFileConfig struct {
+	SupportsAllDrives *bool
+}
+
+func (service *Service) UpdateFile(fileId string, mimeType string, content *[]byte, config *UpdateFileConfig) (*File, *errortools.Error) {
 	file := File{}
 
 	header := http.Header{}
 	header.Set("Content-Type", mimeType)
 
+	values := url.Values{}
+
+	values.Set("uploadType", "media")
+
+	if config != nil {
+		if config.SupportsAllDrives != nil {
+			values.Set("supportsAllDrives", fmt.Sprintf("%v", *config.SupportsAllDrives))
+		}
+	}
+
 	requestConfig := go_http.RequestConfig{
 		Method:            http.MethodPatch,
 		Url:               fmt.Sprintf("https://www.googleapis.com/upload/drive/v3/files/%s", fileId),
+		Parameters:        &values,
 		BodyRaw:           content,
 		ResponseModel:     &file,
 		NonDefaultHeaders: &header,
