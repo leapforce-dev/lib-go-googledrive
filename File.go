@@ -2,12 +2,11 @@ package googledrive
 
 import (
 	"fmt"
+	errortools "github.com/leapforce-libraries/go_errortools"
+	go_http "github.com/leapforce-libraries/go_http"
 	"net/http"
 	"net/url"
 	"strings"
-
-	errortools "github.com/leapforce-libraries/go_errortools"
-	go_http "github.com/leapforce-libraries/go_http"
 )
 
 type FilesResponse struct {
