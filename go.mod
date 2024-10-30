@@ -1,4 +1,4 @@
-module github.com/leapforce-dev/lib-go-googledrive
+module github.com/leapforce-libraries/go_googledrive
 
 go 1.22
 
